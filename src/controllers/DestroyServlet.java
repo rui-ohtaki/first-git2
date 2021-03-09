@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Tasks;
+import models.Task;
 import utils.DBUtil;
 
 /**
@@ -36,11 +36,12 @@ public class DestroyServlet extends HttpServlet {
 
             // セッションスコープからメッセージのIDを取得して
             // 該当のIDのメッセージ1件のみをデータベースから取得
-            Tasks m = em.find(Tasks.class, (Integer)(request.getSession().getAttribute("task_id")));
+            Task m = em.find(Task.class, (Integer)(request.getSession().getAttribute("task_id")));
 
             em.getTransaction().begin();
             em.remove(m);       // データ削除
             em.getTransaction().commit();
+            request.getSession().setAttribute("flush", "削除が完了しました。");       // ここを追記
             em.close();
 
             // セッションスコープ上の不要になったデータを削除
